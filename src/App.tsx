@@ -12,6 +12,7 @@ import { AnalyticsCharts } from './components/AnalyticsCharts';
 import { TransactionList } from './components/TransactionList';
 import { TransactionFormModal } from './components/TransactionFormModal';
 import { BudgetModal } from './components/BudgetModal';
+import { AuthModal } from './components/AuthModal';
 import { Transaction, MonthlyBudget, TransactionType, PaymentMethod } from './types';
 import {
   subscribeUserMonthlyTransactions,
@@ -138,7 +139,7 @@ const INITIAL_DEMO_TRANSACTIONS: Transaction[] = [
 ];
 
 function ExpenseTrackerDashboard() {
-  const { user, login, loading: authLoading } = useAuth();
+  const { user, login, loading: authLoading, openAuthModal } = useAuth();
   const [currentMonth, setCurrentMonth] = useState<string>(getCurrentMonthStr());
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [budget, setBudget] = useState<MonthlyBudget | null>(null);
@@ -374,7 +375,7 @@ function ExpenseTrackerDashboard() {
             </div>
 
             <button
-              onClick={() => login()}
+              onClick={() => openAuthModal()}
               disabled={authLoading}
               className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-xs transition-colors cursor-pointer shrink-0"
             >
@@ -468,6 +469,9 @@ function ExpenseTrackerDashboard() {
         initialBudget={budget?.budgetAmount || 0}
         onSave={handleSaveBudget}
       />
+
+      {/* Authentication Modal */}
+      <AuthModal />
     </div>
   );
 }

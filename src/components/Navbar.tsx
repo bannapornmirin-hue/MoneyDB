@@ -7,7 +7,7 @@ interface NavbarProps {
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ onOpenNewTransaction }) => {
-  const { user, login, logout, loading } = useAuth();
+  const { user, logout, loading, openAuthModal } = useAuth();
 
   return (
     <header className="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-slate-200">
@@ -84,7 +84,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenNewTransaction }) => {
           ) : (
             <button
               id="btn-google-login"
-              onClick={() => login()}
+              onClick={() => openAuthModal()}
               disabled={loading}
               className="inline-flex items-center gap-2.5 px-4 py-2 rounded-lg bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 text-sm font-medium transition-colors shadow-sm cursor-pointer disabled:opacity-60"
             >

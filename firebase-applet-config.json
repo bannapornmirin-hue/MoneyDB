@@ -1,12 +1,12 @@
 {
-  "projectId": "burnished-wave-7pthm",
-  "appId": "1:252220560330:web:427eb8cf8b302a1f58f533",
-  "apiKey": "AIzaSyCniFyLQ9JSlFEhBWQ37QV8oSLJtMQfod0",
-  "authDomain": "burnished-wave-7pthm.firebaseapp.com",
-  "firestoreDatabaseId": "ai-studio-moneyflow-9deeff0a-ae61-48e4-87a7-46662fbcb38a",
-  "storageBucket": "burnished-wave-7pthm.firebasestorage.app",
-  "messagingSenderId": "252220560330",
+  "projectId": "moneydb-33b82",
+  "appId": "1:428966474700:web:bd5e80f0f1dc8f77a32369",
+  "apiKey": "AIzaSyArmFhquAB4DEgxwBGSu8ZQyjFtVMZl7PY",
+  "authDomain": "moneydb-33b82.firebaseapp.com",
+  "firestoreDatabaseId": "(default)",
+  "storageBucket": "moneydb-33b82.firebasestorage.app",
+  "messagingSenderId": "428966474700",
   "measurementId": "",
-  "oAuthClientId": "252220560330-s9g69p7ptoa73pger4ja2ofnr6dg15op.apps.googleusercontent.com",
+  "oAuthClientId": "",
   "recaptchaSiteKey": ""
 }
