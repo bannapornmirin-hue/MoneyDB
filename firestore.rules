@@ -1,0 +1,75 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Global Safety Net: Default-deny all reads and writes
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isValidTransaction(data) {
+      return data.userId == request.auth.uid &&
+             (data.type == 'income' || data.type == 'expense') &&
+             data.amount is number && data.amount >= 0 && data.amount <= 1000000000 &&
+             data.category is string && data.category.size() > 0 && data.category.size() <= 100 &&
+             data.date is string && data.date.size() == 10 && data.date.matches('^\\d{4}-\\d{2}-\\d{2}$') &&
+             data.month is string && data.month.size() == 7 && data.month.matches('^\\d{4}-\\d{2}$') &&
+             (!('note' in data) || (data.note is string && data.note.size() <= 500)) &&
+             (!('paymentMethod' in data) || (data.paymentMethod is string && data.paymentMethod.size() <= 50)) &&
+             (!('userEmail' in data) || (data.userEmail is string && data.userEmail.size() <= 150)) &&
+             (!('year' in data) || (data.year is number));
+    }
+
+    function isValidBudget(data) {
+      return data.userId == request.auth.uid &&
+             data.month is string && data.month.size() == 7 && data.month.matches('^\\d{4}-\\d{2}$') &&
+             data.budgetAmount is number && data.budgetAmount >= 0 && data.budgetAmount <= 1000000000;
+    }
+
+    // Income and Expense Transactions
+    match /transactions/{transactionId} {
+      allow get: if isSignedIn() && isValidId(transactionId) && existing().userId == request.auth.uid;
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn() && isValidId(transactionId) &&
+                    incoming().userId == request.auth.uid &&
+                    isValidTransaction(incoming());
+      allow update: if isSignedIn() && isValidId(transactionId) &&
+                    existing().userId == request.auth.uid &&
+                    incoming().userId == request.auth.uid &&
+                    isValidTransaction(incoming());
+      allow delete: if isSignedIn() && isValidId(transactionId) && existing().userId == request.auth.uid;
+    }
+
+    // Monthly Budgets
+    match /budgets/{budgetId} {
+      allow get: if isSignedIn() && isValidId(budgetId) && existing().userId == request.auth.uid;
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn() && isValidId(budgetId) &&
+                    incoming().userId == request.auth.uid &&
+                    isValidBudget(incoming());
+      allow update: if isSignedIn() && isValidId(budgetId) &&
+                    existing().userId == request.auth.uid &&
+                    incoming().userId == request.auth.uid &&
+                    isValidBudget(incoming());
+      allow delete: if isSignedIn() && isValidId(budgetId) && existing().userId == request.auth.uid;
+    }
+  }
+}

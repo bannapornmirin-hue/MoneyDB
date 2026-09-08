@@ -1,0 +1,107 @@
+{
+  "entities": {
+    "Transaction": {
+      "title": "Transaction",
+      "description": "Income or expense record created by an authenticated user",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "Firebase Auth UID of the owner"
+        },
+        "userEmail": {
+          "type": "string",
+          "description": "Email address of the user"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["income", "expense"],
+          "description": "Transaction type: income or expense"
+        },
+        "amount": {
+          "type": "number",
+          "description": "Amount in currency (THB)"
+        },
+        "category": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "Category name (e.g., Food, Transport, Salary)"
+        },
+        "date": {
+          "type": "string",
+          "maxLength": 10,
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "Transaction date in YYYY-MM-DD format"
+        },
+        "month": {
+          "type": "string",
+          "maxLength": 7,
+          "pattern": "^\\d{4}-\\d{2}$",
+          "description": "Month identifier in YYYY-MM format"
+        },
+        "year": {
+          "type": "number",
+          "description": "Year of transaction"
+        },
+        "note": {
+          "type": "string",
+          "maxLength": 500,
+          "description": "Optional notes or details"
+        },
+        "paymentMethod": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "Payment channel (cash, card, transfer)"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when record was created"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when record was last updated"
+        }
+      },
+      "required": ["userId", "type", "amount", "category", "date", "month"]
+    },
+    "MonthlyBudget": {
+      "title": "MonthlyBudget",
+      "description": "Monthly expense budget target for a user",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "Firebase Auth UID of the owner"
+        },
+        "month": {
+          "type": "string",
+          "maxLength": 7,
+          "pattern": "^\\d{4}-\\d{2}$",
+          "description": "Month in YYYY-MM format"
+        },
+        "budgetAmount": {
+          "type": "number",
+          "description": "Budget limit for expenses"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last updated timestamp"
+        }
+      },
+      "required": ["userId", "month", "budgetAmount"]
+    }
+  },
+  "firestore": {
+    "/transactions/{transactionId}": {
+      "schema": "Transaction",
+      "description": "Stores user income and expense records"
+    },
+    "/budgets/{budgetId}": {
+      "schema": "MonthlyBudget",
+      "description": "Stores user monthly expense budgets"
+    }
+  }
+}
